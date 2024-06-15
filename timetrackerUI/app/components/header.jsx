@@ -12,7 +12,8 @@ class Header extends React.Component
                     <Link className={"header-link"} to="/done">Выполненные</Link>
                     <Link className={"header-link"} to="/undone">Невыполненные</Link>
                 </div>
-                <p class="add-bt">Добавить задачу</p>
+                {/* <p class="add-bt">Добавить задачу</p> */}
+                <Link className={"add-bt"} to="/create-task">Добавить задачу</Link>
             </div>
         )
     }

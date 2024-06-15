@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import TasksPage from "./components/tasksPage.jsx";
 import NotFound from "./components/notFound.jsx";
+import CreatePage from "./components/createTask.jsx";
 import Header from "./components/header.jsx" 
 
 
@@ -18,6 +19,7 @@ ReactDOM.createRoot(
                     <Route path="/" element={<TasksPage />} />
                     <Route path="/done" element={<TasksPage />} />
                     <Route path="/undone" element={<TasksPage />} />
+                    <Route path="/create-task" element={<CreatePage />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
         </div>
