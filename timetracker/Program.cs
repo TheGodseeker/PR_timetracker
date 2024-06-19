@@ -1,3 +1,5 @@
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => 
@@ -7,6 +9,7 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod()
     )
 );
+
 
 builder.Services.AddControllers();
 

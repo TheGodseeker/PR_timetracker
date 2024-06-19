@@ -1,4 +1,5 @@
    using Microsoft.AspNetCore.Mvc;
+
    using System.Text.Json;
 
    namespace TTController.Controllers
@@ -45,6 +46,28 @@
                     string result = JsonSerializer.Serialize(tasks);
 
                     return Ok(result);
+                }
+            }
+
+            [HttpPost]
+            public void AddTask(string _name, string _desc = null, long exptTime = 0)
+            {
+                using (var context = new DBConnector()){
+                    
+                    var tasksCount = context.tasks.ToList().Count + 1;
+
+                    var newTask = new Task{
+                        id = tasksCount,
+                        name = _name,
+                        desc = _desc,
+                        expTime = exptTime,
+                        spentTime = 0,
+                        isDone = false
+                    };
+
+                    context.tasks.Add(newTask);
+                    context.SaveChanges();
+
                 }
             }
         }
