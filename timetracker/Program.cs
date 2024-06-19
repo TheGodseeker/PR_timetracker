@@ -9,9 +9,6 @@ builder.Services.AddCors(options =>
 );
 
 builder.Services.AddControllers();
-// builder.Services.AddAuthentication();
-// builder.Services.AddAuthorization();
-// builder.Services.ConfigureIdentity();
 
 var app = builder.Build();
 

@@ -14,15 +14,26 @@ class TasksPage extends React.Component {
       }
 
       componentDidMount() {
-      fetch('http://localhost:5129/TimeTracker/GetAllTasks')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+
+        let getFunc = 'GetAllTasks'
+
+        if(this.props.isDone != null)
+          {
+            if (this.props.isDone)
+              getFunc = 'GetDoneTasks'
+            else
+              getFunc = 'GetUndoneTasks'
           }
-          return response.json();
-        })
-        .then(data => this.setState({ data: data}))
-        .catch(error => this.setState({ error: error}));
+
+        fetch(`http://localhost:5129/TimeTracker/${getFunc}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => this.setState({ data: data}))
+          .catch(error => this.setState({ error: error}));
     }
     
     render()
@@ -74,5 +85,9 @@ class TasksPage extends React.Component {
         return <div class = "tp-main">{tasksList}</div>;
     }
 }
+
+TasksPage.defaultProps = {
+  isDone: null,
+  getFunc: 'http://localhost:5129/TimeTracker/GetAllTasks'}
 
 export default TasksPage;

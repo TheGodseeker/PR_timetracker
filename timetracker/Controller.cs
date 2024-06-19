@@ -3,23 +3,49 @@
 
    namespace TTController.Controllers
    {
-        // [Route("api/[controller]")]
-        // [ApiController]
         public class TimeTracker : Controller
         {
-            //TO-DO: сделать упаковку данных в json-формат
+            //TO-DO: сделать конвертацию времени из милисек. в норм. формат
             [HttpGet]
             public IActionResult GetAllTasks()
             {
                 using (var context = new DBConnector()){
-                    // foreach(var task in context.tasks.ToList()){
 
-                    // }
                     string result = JsonSerializer.Serialize(context.tasks.ToList());
 
                     return Ok(result);
                 }
                 
+            }
+
+            [HttpGet]
+            public IActionResult GetDoneTasks()
+            {
+                using (var context = new DBConnector()){
+                    List<Task> tasks = new List<Task>();
+                    foreach(var task in context.tasks.ToList()){
+                        if (task.isDone)
+                            tasks.Add(task);
+                    }
+                    string result = JsonSerializer.Serialize(tasks);
+
+                    return Ok(result);
+                }
+            }
+
+            [HttpGet]
+            public IActionResult GetUndoneTasks()
+            {
+                using (var context = new DBConnector()){
+                    List<Task> tasks = new List<Task>();
+                    foreach(var task in context.tasks.ToList()){
+                        if (!task.isDone)
+                            tasks.Add(task);
+                    }
+                    string result = JsonSerializer.Serialize(tasks);
+
+                    return Ok(result);
+                }
             }
         }
    }
