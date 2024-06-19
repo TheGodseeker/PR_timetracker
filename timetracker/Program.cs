@@ -8,38 +8,19 @@ builder.Services.AddCors(options =>
     )
 );
 
+builder.Services.AddControllers();
 // builder.Services.AddAuthentication();
 // builder.Services.AddAuthorization();
 // builder.Services.ConfigureIdentity();
 
 var app = builder.Build();
 
-// app.UseHttpsRedirection();
-
-// app.UseRouting();
-
-// app.UseCors(builder => builder.AllowAnyOrigin());
-
-
 app.UseCors("AllowMain");
 
-app.MapGet("/api/tasks", () =>
-{
-     using (var context = new DBConnector())
-            {
-                return Results.Json(context.tasks.ToList());
-            }
-});
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// app.UseAuthorization();
-
-// app.MapControllers();
-
-// app.Run(async(context) => 
-// {
-//     context.Response.ContentType = "text/html; charset=utf-8";
-//     await context.Response.SendFileAsync("../timetrackerUI/index.html");
-// });
 
 app.Run();
 

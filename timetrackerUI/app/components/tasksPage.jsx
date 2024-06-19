@@ -8,56 +8,70 @@ class TasksPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          data: { key: '', value: '' },
+          data: null,
+          error: null,
         };
       }
 
-      handleSubmit = async () => {
-        try {
-          const response = await fetch('http://localhost:5129/api/tasks', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(this.state.data),
-          });
-    
+      componentDidMount() {
+      fetch('http://localhost:5129/TimeTracker/GetAllTasks')
+        .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-    
-          console.log('Data successfully sent to the server');
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
-    
-    // getAllTasks()
-    // {
-    //     fetch('http://localhost:5129/api/tasks')
-    //         .then(response => {
-    //             if (!response.ok) {
-    //                 throw new Error('Network response was not ok');
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(data => console.log(data))
-    //         .catch(error => console.error('There has been a problem with your fetch operation:', error));
-    // }
-
+          return response.json();
+        })
+        .then(data => this.setState({ data: data}))
+        .catch(error => this.setState({ error: error}));
+    }
     
     render()
     {         
-        this.handleSubmit()
-        console.log(this.state.data)
+        const {data, error} = this.state;
+        const tasksList = []
+        
+        if (error)
+          {
+            console.error(error.message)
+          }
+        else
+          {
+            for (let task in data)
+              {
+                var spentHours = Math.floor(data[task]['spentTime']/3600000);
+                var spentMinutes = Math.floor((data[task]['spentTime'] - spentHours * 3600000)/60000);
 
-        return(
-            <div class = "tp-main">
-                <Task isVisible={true} />
-                <Task name="Метаморфозы" spentTime="10 ч. 30 мин." isDoneStyle="acssepted" isDone="Выполнено"/>
-                <Task name="Прокростинация рыбы" spentTime="999 ч. 99 мин." timeStyle="overdue"/>
-            </div>
-        )
+                let expHours = null
+                let expMinutes = null
+
+                var expTimeTxt = "Не установлено"
+                var timeStyleName = "norm-time"
+                
+                if (data[task]['expTime'] != 0)
+                  {
+                    expHours = Math.floor(data[task]['expTime']/3600000)
+                    expMinutes = Math.floor((data[task]['expTime'] - expHours * 3600000 )/60000)
+
+                    expTimeTxt = `${expHours} ч. ${expMinutes} мин.`
+
+                    if (data[task]['spentTime'] > data[task]['expTime'])
+                        timeStyleName = "overdue"
+                  } 
+
+                tasksList.push(<Task 
+                  name={data[task]['name']} 
+                  desc={data[task]['desc'] ?? "Описание отсутствует."} 
+                  isDoneStyle={data[task]['isDone'] ?  "acssepted": "acssept"}
+                  isDone={data[task]['isDone'] ?  "Выполнено": "Закончить"}
+                  spentTime={`${spentHours} ч. ${spentMinutes} мин.`}
+                  exptTime={expTimeTxt}
+                  timeStyle={timeStyleName}
+                  />)
+              }
+
+          }
+        
+        return <div class = "tp-main">{tasksList}</div>;
     }
 }
 
