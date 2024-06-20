@@ -6,7 +6,7 @@ public class DBConnector : DbContext
 { 
 
     public DbSet<Task> tasks { get; set; }
-    //public DbSet<TimeGap> timeGaps { get; set; }
+    public DbSet<TimeGap> timeGaps { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

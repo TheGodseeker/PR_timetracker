@@ -6,6 +6,7 @@
    {
         public class TimeTracker : Controller
         {
+            //Запросы для таблицы "tasks"
             //TO-DO: сделать конвертацию времени из милисек. в норм. формат
             [HttpGet]
             public IActionResult GetAllTasks()
@@ -68,6 +69,31 @@
                     context.tasks.Add(newTask);
                     context.SaveChanges();
 
+                }
+            }
+
+            // Запросы для таблицы "timeGaps"
+            [HttpGet]
+            public IActionResult GetTimeGaps(long taskID)
+            {
+                using (var context = new DBConnector()){
+                    List<TimeGap> gaps = new List<TimeGap>(); 
+
+                    Console.WriteLine($"TaskID = {taskID}");
+
+                    foreach (var gap in context.timeGaps.ToList())
+                    {
+                        Console.WriteLine(gap.idTask);
+                        if(gap.idTask == taskID)
+                            gaps.Add(gap);
+
+                    }                 
+                    
+                    string result = JsonSerializer.Serialize(gaps);
+                    Console.WriteLine(result);
+
+
+                    return Ok(result);
                 }
             }
         }

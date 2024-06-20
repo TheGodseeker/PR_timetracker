@@ -1,5 +1,7 @@
 import React from "react";
 
+import GapsCard from "./gapsCard.jsx";
+
 class Overlay extends React.Component {
     
 

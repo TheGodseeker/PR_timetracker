@@ -68,6 +68,8 @@ class TasksPage extends React.Component {
                     if (data[task]['spentTime'] > data[task]['expTime'])
                         timeStyleName = "overdue"
                   } 
+                
+                // console.log(data[task]['id'])
 
                 tasksList.push(<Task 
                   name={data[task]['name']} 
@@ -77,6 +79,7 @@ class TasksPage extends React.Component {
                   spentTime={`${spentHours} ч. ${spentMinutes} мин.`}
                   exptTime={expTimeTxt}
                   timeStyle={timeStyleName}
+                  taskId={data[task]['id']}
                   />)
               }
 
@@ -88,6 +91,6 @@ class TasksPage extends React.Component {
 
 TasksPage.defaultProps = {
   isDone: null,
-  getFunc: 'http://localhost:5129/TimeTracker/GetAllTasks'}
+}
 
 export default TasksPage;

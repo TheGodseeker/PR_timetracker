@@ -1,7 +1,7 @@
 import React from "react";
 
 import Overlay from "./overlay.jsx";
-
+import GapsCard from "./gapsCard.jsx";
 
 
 class Task extends React.Component {
@@ -32,7 +32,8 @@ class Task extends React.Component {
                     <h4 class="add-bt">Старт</h4>
                     <h4 class = {this.props.isDoneStyle} >{this.props.isDone}</h4>
                 </div>
-                <Overlay isVisible={isVisible} desc={this.props.desc} exptTime={this.props.exptTime}/>              
+                <Overlay isVisible={isVisible} desc={this.props.desc} exptTime={this.props.exptTime}/>
+                <GapsCard isVisible={isVisible} taskID={this.props.taskId}/>
             </div>
         )
     }
@@ -46,7 +47,8 @@ Task.defaultProps = {
     isDoneStyle : "acssept",
     desc: "Описание отсутствует.",
     exptTime: "0 ч. 0 мин.",
-    isVisible: false
+    isVisible: false,
+    taskId: null
 }
 
 export default Task;
