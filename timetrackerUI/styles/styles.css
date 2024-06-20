@@ -52,6 +52,7 @@ h1 {
     /* margin-right: 3%; */
     color: black;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .task-main {
@@ -93,19 +94,21 @@ h1 {
 .task h4 {
     padding: 1%;
     margin-right: 5%;
-    cursor: pointer;
+    
 }
 
 .acssept {
     background-color: #30ac41;
     border-radius: 20px;
     color: white;
+    cursor: pointer;
 }
 
 .acssepted {
     background-color: #913fd4;
     border-radius: 20px;
     color: white;
+    cursor: default;
 }
 
 .overdue {

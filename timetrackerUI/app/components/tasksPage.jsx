@@ -51,9 +51,11 @@ class TasksPage extends React.Component {
               {
                 var spentHours = Math.floor(data[task]['spentTime']/3600000);
                 var spentMinutes = Math.floor((data[task]['spentTime'] - spentHours * 3600000)/60000);
+                var spentSeconds = Math.floor(((data[task]['spentTime'] - spentHours * 3600000) - spentMinutes * 60000)/1000)
 
                 let expHours = null
                 let expMinutes = null
+                let expSeconds = null
 
                 var expTimeTxt = "Не установлено"
                 var timeStyleName = "norm-time"
@@ -62,21 +64,21 @@ class TasksPage extends React.Component {
                   {
                     expHours = Math.floor(data[task]['expTime']/3600000)
                     expMinutes = Math.floor((data[task]['expTime'] - expHours * 3600000 )/60000)
+                    expSeconds = Math.floor(((data[task]['expTime'] - expHours * 3600000) - expMinutes * 60000)/1000)
 
-                    expTimeTxt = `${expHours} ч. ${expMinutes} мин.`
+                    expTimeTxt = `${expHours} ч. ${expMinutes} мин. ${expSeconds} сек.`
 
                     if (data[task]['spentTime'] > data[task]['expTime'])
                         timeStyleName = "overdue"
                   } 
                 
-                // console.log(data[task]['id'])
 
                 tasksList.push(<Task 
                   name={data[task]['name']} 
                   desc={data[task]['desc'] ?? "Описание отсутствует."} 
                   isDoneStyle={data[task]['isDone'] ?  "acssepted": "acssept"}
                   isDone={data[task]['isDone'] ?  "Выполнено": "Закончить"}
-                  spentTime={`${spentHours} ч. ${spentMinutes} мин.`}
+                  spentTime={`${spentHours} ч. ${spentMinutes} мин. ${spentSeconds} сек.`}
                   exptTime={expTimeTxt}
                   timeStyle={timeStyleName}
                   taskId={data[task]['id']}

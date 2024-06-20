@@ -15,6 +15,18 @@ class Task extends React.Component {
         };
     }
 
+
+    CompleteTask = () => {
+        fetch(`http://localhost:5129/TimeTracker/CompleteTask?taskID=${this.props.taskId}`, {
+            method: 'PUT'
+        })
+            .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+            window.location.reload()
+        })
+    };
     
     HideElement = () => {
         this.setState({isVisible: this.state.isVisible === false ? true : false});
@@ -30,7 +42,7 @@ class Task extends React.Component {
                     <p class={this.props.timeStyle}>Потрачено времени: </p>
                     <p class={this.props.timeStyle}>{this.props.spentTime}</p>
                     <h4 class="add-bt">Старт</h4>
-                    <h4 class = {this.props.isDoneStyle} >{this.props.isDone}</h4>
+                    <h4 class = {this.props.isDoneStyle} onClick={this.props.isDoneStyle === "acssept"? this.CompleteTask : null}>{this.props.isDone}</h4>
                 </div>
                 <Overlay isVisible={isVisible} desc={this.props.desc} exptTime={this.props.exptTime}/>
                 <GapsCard isVisible={isVisible} taskID={this.props.taskId}/>

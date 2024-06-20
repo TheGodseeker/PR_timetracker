@@ -72,6 +72,22 @@
                 }
             }
 
+            [HttpPut]
+            public void CompleteTask(long taskID)
+            {
+                using (var context = new DBConnector()){
+                    var curTask = context.tasks.FirstOrDefault(item => item.id == taskID);
+
+                    if (curTask != null)
+                    {
+                        curTask.isDone = true;
+
+                        context.SaveChanges();
+                    }
+
+                }
+            }
+
             // Запросы для таблицы "timeGaps"
             [HttpGet]
             public IActionResult GetTimeGaps(long taskID)
