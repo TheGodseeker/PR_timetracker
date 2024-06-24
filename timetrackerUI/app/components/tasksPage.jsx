@@ -17,7 +17,7 @@ class TasksPage extends React.Component {
     getGaps(taskId)
     {
 
-        fetch(`http://localhost:5129/TimeTracker/GetTimeGaps?taskID=${taskId}`)
+        fetch(`http://localhost:5129/Gaps/GetTimeGaps?taskID=${taskId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -43,7 +43,7 @@ class TasksPage extends React.Component {
               getFunc = 'GetUndoneTasks'
           }
 
-        fetch(`http://localhost:5129/TimeTracker/${getFunc}`)
+        fetch(`http://localhost:5129/Tasks/${getFunc}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');

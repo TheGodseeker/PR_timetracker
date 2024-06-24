@@ -26,7 +26,7 @@ class CreatePage extends React.Component {
     async handleSend(event) {
 
         console.log('Submitted values:', this.state);
-        fetch(`http://localhost:5129/TimeTracker/AddTask?_name=${this.state.name}&_desc=${this.state.desc}&exptTime=${this.state.time}`, {
+        fetch(`http://localhost:5129/Tasks/AddTask?_name=${this.state.name}&_desc=${this.state.desc}&exptTime=${this.state.time}`, {
             method: 'POST'
         })
             .then(response => {

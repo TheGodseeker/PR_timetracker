@@ -4,95 +4,10 @@ using System;
 using System.Globalization;
 using System.Text.Json;
 
-   namespace TTController.Controllers
+   namespace GController.Controllers
    {
-        public class TimeTracker : Controller
+        public class GapsController : Controller
         {
-            
-            
-            
-            
-            //Запросы для таблицы "tasks"
-            //TO-DO: сделать конвертацию времени из милисек. в норм. формат
-            [HttpGet]
-            public IActionResult GetAllTasks()
-            {
-                using (var context = new DBConnector()){
-
-                    string result = JsonSerializer.Serialize(context.tasks.ToList());
-
-                    return Ok(result);
-                }
-                
-            }
-
-            [HttpGet]
-            public IActionResult GetDoneTasks()
-            {
-                using (var context = new DBConnector()){
-                    List<Task> tasks = new List<Task>();
-                    foreach(var task in context.tasks.ToList()){
-                        if (task.isDone)
-                            tasks.Add(task);
-                    }
-                    string result = JsonSerializer.Serialize(tasks);
-
-                    return Ok(result);
-                }
-            }
-
-            [HttpGet]
-            public IActionResult GetUndoneTasks()
-            {
-                using (var context = new DBConnector()){
-                    List<Task> tasks = new List<Task>();
-                    foreach(var task in context.tasks.ToList()){
-                        if (!task.isDone)
-                            tasks.Add(task);
-                    }
-                    string result = JsonSerializer.Serialize(tasks);
-
-                    return Ok(result);
-                }
-            }
-
-            [HttpPost]
-            public void AddTask(string _name, string _desc = null, long exptTime = 0)
-            {
-                using (var context = new DBConnector()){
-                    
-                    var tasksCount = context.tasks.ToList().Count + 1;
-
-                    var newTask = new Task{
-                        id = tasksCount,
-                        name = _name,
-                        desc = _desc,
-                        expTime = exptTime,
-                        spentTime = 0,
-                        isDone = false
-                    };
-
-                    context.tasks.Add(newTask);
-                    context.SaveChanges();
-
-                }
-            }
-
-            [HttpPut]
-            public void CompleteTask(long taskID)
-            {
-                using (var context = new DBConnector()){
-                    var curTask = context.tasks.FirstOrDefault(item => item.id == taskID);
-
-                    if (curTask != null)
-                    {
-                        curTask.isDone = true;
-
-                        context.SaveChanges();
-                    }
-
-                }
-            }
 
             // Запросы для таблицы "timeGaps"
             [HttpGet]
@@ -122,8 +37,6 @@ using System.Text.Json;
             /*
             TO-DO:
             Реализация вычисления затраченного времени
-            Варианты:
-            1) SQL-запрос
             2) Расчет внутри функции контроллера
             */
 

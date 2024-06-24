@@ -16,7 +16,7 @@ class GapsCard extends React.Component {
     // getGaps()
     {
 
-        fetch(`http://localhost:5129/TimeTracker/GetTimeGaps?taskID=${this.props.taskID}`)
+        fetch(`http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskID}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');

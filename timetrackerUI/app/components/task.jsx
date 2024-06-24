@@ -26,7 +26,7 @@ class Task extends React.Component {
     getGaps()
     {
 
-        fetch(`http://localhost:5129/TimeTracker/GetTimeGaps?taskID=${this.props.taskId}`)
+        fetch(`http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -41,7 +41,7 @@ class Task extends React.Component {
     }
 
     CompleteTask = () => {
-        fetch(`http://localhost:5129/TimeTracker/CompleteTask?taskID=${this.props.taskId}`, {
+        fetch(`http://localhost:5129/Tasks/CompleteTask?taskID=${this.props.taskId}`, {
             method: 'PUT'
         })
             .then(response => {
@@ -54,7 +54,7 @@ class Task extends React.Component {
  
     SetEndTG = (gapId, status) => {
         
-        let request = `http://localhost:5129/TimeTracker/UpdateEndTimeGap?gapId=${gapId}&isAct=${status}`
+        let request = `http://localhost:5129/Gaps/UpdateEndTimeGap?gapId=${gapId}&isAct=${status}`
         
         console.log(request)
 
@@ -80,7 +80,7 @@ class Task extends React.Component {
         // this.state.isPlaying = true
         this.setState({isPlaying: true})
         
-        let request = `http://localhost:5129/TimeTracker/AddTimeGap?taskID=${this.props.taskId}` 
+        let request = `http://localhost:5129/Gaps/AddTimeGap?taskID=${this.props.taskId}` 
 
         console.log(request)
 
