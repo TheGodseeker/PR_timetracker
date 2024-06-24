@@ -22,6 +22,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(5)
+};
+
+app.UseWebSockets(webSocketOptions);
+
 app.Run();
 
 

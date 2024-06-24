@@ -9,10 +9,28 @@ class TasksPage extends React.Component {
         super(props);
         this.state = {
           data: null,
+          gapsData: null,
           error: null,
         };
       }
 
+    getGaps(taskId)
+    {
+
+        fetch(`http://localhost:5129/TimeTracker/GetTimeGaps?taskID=${taskId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => this.setState({ gapsData: data}))
+        .catch(error => this.setState({ error: error}));
+
+    }
+
+      // GetTasks(){
+      // render() {
       componentDidMount() {
 
         let getFunc = 'GetAllTasks'
@@ -38,17 +56,20 @@ class TasksPage extends React.Component {
     
     render()
     {         
-        const {data, error} = this.state;
+        const {data, gapsData, error} = this.state;
         const tasksList = []
-        
+
+
+        // this.GetTasks()
+
         if (error)
           {
             console.error(error.message)
           }
         else
           {
-            for (let task in data)
-              {
+
+            for (let task in data) {
                 var spentHours = Math.floor(data[task]['spentTime']/3600000);
                 var spentMinutes = Math.floor((data[task]['spentTime'] - spentHours * 3600000)/60000);
                 var spentSeconds = Math.floor(((data[task]['spentTime'] - spentHours * 3600000) - spentMinutes * 60000)/1000)
@@ -83,8 +104,8 @@ class TasksPage extends React.Component {
                   timeStyle={timeStyleName}
                   taskId={data[task]['id']}
                   />)
-              }
-
+              
+                }
           }
         
         return <div class = "tp-main">{tasksList}</div>;

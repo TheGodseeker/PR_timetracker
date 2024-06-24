@@ -8,4 +8,6 @@ public class TimeGap
 
     public DateTime timeStart { get; set; }
     public DateTime? timeFinish { get; set; }
+
+    public bool isActive {get; set;}
 }
