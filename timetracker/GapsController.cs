@@ -8,7 +8,6 @@ using System.Text.Json;
    {
         public class GapsController : Controller
         {
-
             // Запросы для таблицы "timeGaps"
             [HttpGet]
             public IActionResult GetTimeGaps(long taskID)
