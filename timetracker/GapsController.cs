@@ -8,11 +8,18 @@ using System.Text.Json;
    {
         public class GapsController : Controller
         {
+            DBConnector context;
+
+            public GapsController()
+            {
+                this.context = new DBConnector();
+            }
+
             // Запросы для таблицы "timeGaps"
             [HttpGet]
             public IActionResult GetTimeGaps(long taskID)
             {
-                using (var context = new DBConnector()){
+                using var context = this.context;
                     List<TimeGap> gaps = new List<TimeGap>(); 
 
                     // Console.WriteLine($"TaskID = {taskID}");
@@ -25,12 +32,11 @@ using System.Text.Json;
 
                     }                 
                     
-                    string result = JsonSerializer.Serialize(gaps);
+                    var result = JsonSerializer.Serialize(gaps);
                     // Console.WriteLine(result);
 
 
                     return Ok(result);
-                }
             }
 
             /*
@@ -42,7 +48,7 @@ using System.Text.Json;
             [HttpPost] 
             public void AddTimeGap(long taskID, long userID = 1)
             {
-                using (var context = new DBConnector()){
+                using var context = this.context;
                     var gapsCount = context.timeGaps.ToList().Count + 1;
 
                     var newGap = new TimeGap{
@@ -57,7 +63,6 @@ using System.Text.Json;
                     context.timeGaps.Add(newGap);
                     context.SaveChanges();
 
-                }
             }
 
 
@@ -71,9 +76,9 @@ using System.Text.Json;
             // }
 
             [HttpPut]
-            public void UpdateEndTimeGap(long gapId, bool isAct = true)
+            public IActionResult UpdateEndTimeGap(long gapId, bool isAct = true)
             {
-                using (var context = new DBConnector()){
+                using var context = this.context;
                     var curGap = context.timeGaps.FirstOrDefault(item => item.id == gapId);
                 
                     if (curGap != null)
@@ -87,11 +92,17 @@ using System.Text.Json;
                             {
                                 curGap.timeFinish = curDT;
                                 context.SaveChanges();
+
+                                return Ok();
                             }
-                                
+                            else
+                                return NoContent();                                        
                         }
+                        else
+                            return NoContent();
                     }
-                }
+                    else
+                        return NoContent();
             }
 
         }

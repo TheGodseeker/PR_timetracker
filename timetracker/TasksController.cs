@@ -9,54 +9,59 @@ using System.Text.Json;
         public class TasksController : Controller
         {
 
+            DBConnector context;
+
+            public TasksController()
+            {
+                this.context = new DBConnector();
+            }
+            
             //Запросы для таблицы "tasks"
             //TO-DO: сделать конвертацию времени из милисек. в норм. формат
             [HttpGet]
             public IActionResult GetAllTasks()
             {
-                using (var context = new DBConnector()){
+                using var context = this.context;
 
-                    string result = JsonSerializer.Serialize(context.tasks.ToList());
+                var result = JsonSerializer.Serialize(context.tasks.ToList());
 
-                    return Ok(result);
-                }
-                
+                return Ok(result);
             }
+                
 
             [HttpGet]
             public IActionResult GetDoneTasks()
             {
-                using (var context = new DBConnector()){
-                    List<Task> tasks = new List<Task>();
+                using var context = this.context;
+                    var tasks = new List<Task>();
                     foreach(var task in context.tasks.ToList()){
                         if (task.isDone)
                             tasks.Add(task);
                     }
-                    string result = JsonSerializer.Serialize(tasks);
+                    var result = JsonSerializer.Serialize(tasks);
 
                     return Ok(result);
-                }
             }
 
             [HttpGet]
             public IActionResult GetUndoneTasks()
             {
-                using (var context = new DBConnector()){
-                    List<Task> tasks = new List<Task>();
+                using var context = this.context;
+                List<Task> tasks = new List<Task>();
                     foreach(var task in context.tasks.ToList()){
                         if (!task.isDone)
                             tasks.Add(task);
                     }
-                    string result = JsonSerializer.Serialize(tasks);
+                    var result = JsonSerializer.Serialize(tasks);
 
                     return Ok(result);
-                }
+
             }
 
             [HttpPost]
             public void AddTask(string _name, string _desc = null, long exptTime = 0)
             {
-                using (var context = new DBConnector()){
+                using var context = this.context;
                     
                     var tasksCount = context.tasks.ToList().Count + 1;
 
@@ -72,13 +77,13 @@ using System.Text.Json;
                     context.tasks.Add(newTask);
                     context.SaveChanges();
 
-                }
             }
 
+
             [HttpPut]
-            public void CompleteTask(long taskID)
+            public IActionResult CompleteTask(long taskID)
             {
-                using (var context = new DBConnector()){
+                using var context = this.context;
                     var curTask = context.tasks.FirstOrDefault(item => item.id == taskID);
 
                     if (curTask != null)
@@ -86,9 +91,12 @@ using System.Text.Json;
                         curTask.isDone = true;
 
                         context.SaveChanges();
-                    }
 
-                }
+                        return Ok();
+                    }
+                    else
+                        return NoContent();
+
             }
 
         }
