@@ -16,8 +16,6 @@ using System.Text.Json;
                 this.context = new DBConnector();
             }
             
-            //Запросы для таблицы "tasks"
-            //TO-DO: сделать конвертацию времени из милисек. в норм. формат
             [HttpGet]
             public IActionResult GetAllTasks()
             {
@@ -33,28 +31,27 @@ using System.Text.Json;
             public IActionResult GetDoneTasks()
             {
                 using var context = this.context;
-                    var tasks = new List<Task>();
-                    foreach(var task in context.tasks.ToList()){
-                        if (task.isDone)
-                            tasks.Add(task);
-                    }
-                    var result = JsonSerializer.Serialize(tasks);
 
-                    return Ok(result);
+                var tasks = from task in context.tasks.ToList()
+                            where task.isDone == true
+                            select task;
+
+                var result = JsonSerializer.Serialize(tasks);
+                return Ok(result);
             }
 
             [HttpGet]
             public IActionResult GetUndoneTasks()
             {
                 using var context = this.context;
-                List<Task> tasks = new List<Task>();
-                    foreach(var task in context.tasks.ToList()){
-                        if (!task.isDone)
-                            tasks.Add(task);
-                    }
-                    var result = JsonSerializer.Serialize(tasks);
 
-                    return Ok(result);
+                var tasks = from task in context.tasks.ToList()
+                            where task.isDone == true
+                            select task;
+                
+                var result = JsonSerializer.Serialize(tasks);
+
+                return Ok(result);
 
             }
 

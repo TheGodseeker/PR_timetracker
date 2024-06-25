@@ -20,23 +20,13 @@ using System.Text.Json;
             public IActionResult GetTimeGaps(long taskID)
             {
                 using var context = this.context;
-                    List<TimeGap> gaps = new List<TimeGap>(); 
-
-                    // Console.WriteLine($"TaskID = {taskID}");
-
-                    foreach (var gap in context.timeGaps.ToList())
-                    {
-                        // Console.WriteLine(gap.idTask);
-                        if(gap.idTask == taskID)
-                            gaps.Add(gap);
-
-                    }                 
-                    
-                    var result = JsonSerializer.Serialize(gaps);
-                    // Console.WriteLine(result);
-
-
-                    return Ok(result);
+                
+                var gaps = from gap in context.timeGaps.ToList()
+                           where gap.idTask == taskID
+                           select gap;                 
+                
+                var result = JsonSerializer.Serialize(gaps);
+                return Ok(result);
             }
 
             /*
