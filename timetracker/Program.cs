@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => 
@@ -8,6 +10,12 @@ builder.Services.AddCors(options =>
     )
 );
 
+builder.Services.AddDbContext<DBConnector>(
+    options => options.UseNpgsql("Host=127.0.0.1;Database=timetracker;Username=tengu;Password=root")
+);
+
+builder.Services.AddScoped<ITask, TaskRep>();
+builder.Services.AddScoped<IGaps, GapsRep>();
 
 builder.Services.AddControllers();
 
