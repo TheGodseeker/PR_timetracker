@@ -14,7 +14,7 @@ public class GapsRep : IGaps
     public IEnumerable<TimeGap> GetTimeGaps(long taskID)
     {
         var gaps = from gap in _context.timeGaps.ToList()
-                   where gap.IdTask == taskID
+                   where gap.idTask == taskID
                    select gap;
 
         return gaps; 

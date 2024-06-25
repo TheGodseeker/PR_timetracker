@@ -14,14 +14,17 @@ public class DBConnector : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-    modelBuilder.Entity<DBTask>()
-        .HasKey(e => e.Id);
+    // modelBuilder.Entity<DBTask>()
+    //     .HasKey(e => e.Id);
+
+    // modelBuilder.Entity<TimeGap>()
+    //     .HasKey(e => e.Id);
 
 
-    modelBuilder.Entity<TimeGap>()
-        .HasKey(e => e.Id);
+    // modelBuilder.Entity<DBTask>().ToTable("tasks");
+    // modelBuilder.Entity<TimeGap>().ToTable("timeGaps");
 
-    // Настройки других сущностей и свойств...
+
     }
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

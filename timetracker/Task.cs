@@ -6,21 +6,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class DBTask 
 {
 
-    [Column("id", TypeName="bigint")]
-    public long Id { get; set; }
 
-    [Column("expTime", TypeName="bigint")]
-    public long ExpTime { get; set; }
+    public long id { get; set; }
+
+    public long expTime { get; set; }
     
-    [Column("spentTime", TypeName="bigint")]
-    public long SpentTime { get; set; }
+    public long spentTime { get; set; }
 
-    [Column("name", TypeName="character(50)")]
-    public string Name { get; set; }
+    public string name { get; set; }
     
-    [Column("desc", TypeName="text")]
-    public string? Desc { get; set; }
+    public string? desc { get; set; }
 
-    [Column("isDone", TypeName="boolean")]
-    public bool IsDone { get; set; }
+    public bool isDone { get; set; }
 }

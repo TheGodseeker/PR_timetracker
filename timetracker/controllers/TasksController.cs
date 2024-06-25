@@ -56,18 +56,18 @@ using System.Text.Json;
             }
 
             [HttpPost]
-            public void AddTask(string name, string desc = null, long expTime = 0)
+            public void AddTask(string n, string d = null, long et = 0)
             {
                     
                 var tasksCount = _context.tasks.ToList().Count + 1;
 
                 var newTask = new DBTask{
-                            Id = tasksCount,
-                            Name = name,
-                            Desc = desc,
-                            ExpTime = expTime,
-                            SpentTime = 0,
-                            IsDone = false
+                            id = tasksCount,
+                            name = n,
+                            desc = d,
+                            expTime = et,
+                            spentTime = 0,
+                            isDone = false
                             };
 
                 _context.tasks.Add(newTask);
@@ -79,12 +79,12 @@ using System.Text.Json;
             [HttpPut]
             public IActionResult CompleteTask(long taskID)
             {
-                var curTask = _context.tasks.FirstOrDefault(item => item.Id == taskID);
+                var curTask = _context.tasks.FirstOrDefault(item => item.id == taskID);
 
                 if (curTask == null)
                     return NoContent();
 
-                curTask.IsDone = true;
+                curTask.isDone = true;
 
                 _context.SaveChanges();
 

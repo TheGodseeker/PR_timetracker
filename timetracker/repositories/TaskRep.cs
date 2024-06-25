@@ -11,10 +11,10 @@ public class TaskRep : ITask
         _context = dBConnector;
     }
     
-    public IEnumerable<DBTask> GetTasks(bool isDone)
+    public IEnumerable<DBTask> GetTasks(bool done)
     {
         var tasks = from task in _context.tasks.ToList()
-                    where task.IsDone == isDone 
+                    where task.isDone == done 
                     select task;
 
         return tasks;

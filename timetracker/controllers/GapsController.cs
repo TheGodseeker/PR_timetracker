@@ -37,12 +37,12 @@ using System.Text.Json;
                     var gapsCount = _context.timeGaps.ToList().Count + 1;
 
                     var newGap = new TimeGap{
-                        Id = gapsCount,
-                        IdTask = taskID,
-                        IdUser = userID,
-                        TimeStart = DateTime.UtcNow,
-                        TimeFinish = null,
-                        IsActive = true
+                        id = gapsCount,
+                        idTask = taskID,
+                        idUser = userID,
+                        timeStart = DateTime.UtcNow,
+                        timeFinish = null,
+                        isActive = true
                     };
 
                     _context.timeGaps.Add(newGap);
@@ -63,20 +63,20 @@ using System.Text.Json;
             [HttpPut]
             public IActionResult UpdateEndTimeGap(long gapId, bool isAct = true)
             {
-                    var curGap = _context.timeGaps.FirstOrDefault(item => item.Id == gapId);
+                    var curGap = _context.timeGaps.FirstOrDefault(item => item.id == gapId);
                 
                     if (curGap == null)
                         return NoContent();
                     
-                    curGap.IsActive = isAct;   
+                    curGap.isActive = isAct;   
                     var curDT = DateTime.UtcNow;
 
-                    if(curGap.TimeFinish != null)
+                    if(curGap.timeFinish != null)
                         return NoContent();
                         
-                    if (curGap.TimeFinish > curDT && curGap.TimeStart > curDT)
+                    if (curGap.timeFinish > curDT && curGap.timeStart > curDT)
                     {
-                        curGap.TimeFinish = curDT;
+                        curGap.timeFinish = curDT;
                         _context.SaveChanges();
                         
                         return Ok();
