@@ -14,22 +14,6 @@ public class DBConnector : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-    // modelBuilder.Entity<DBTask>()
-    //     .HasKey(e => e.Id);
-
-    // modelBuilder.Entity<TimeGap>()
-    //     .HasKey(e => e.Id);
-
-
-    // modelBuilder.Entity<DBTask>().ToTable("tasks");
-    // modelBuilder.Entity<TimeGap>().ToTable("timeGaps");
-
-
     }
-
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     optionsBuilder.UseNpgsql("Host=127.0.0.1;Database=timetracker;Username=tengu;Password=root");
-    // }
 
 }

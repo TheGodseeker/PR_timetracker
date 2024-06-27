@@ -25,12 +25,6 @@ using System.Text.Json;
                 return Ok(result);
             }
 
-            /*
-            TO-DO:
-            Реализация вычисления затраченного времени
-            2) Расчет внутри функции контроллера
-            */
-
             [HttpPut] 
             public void AddTimeGap(long taskID, long userID = 1)
             {

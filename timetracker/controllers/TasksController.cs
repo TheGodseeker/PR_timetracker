@@ -21,9 +21,6 @@ using System.Text.Json;
             [HttpGet]
             public IActionResult GetAllTasks()
             {
-
-                // var result = JsonSerializer.Serialize(_context.tasks.ToList());
-
                 var result = _taskRep.GetAllTasks();
 
                 return Ok(result);

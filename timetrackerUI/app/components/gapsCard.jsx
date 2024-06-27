@@ -13,7 +13,7 @@ class GapsCard extends React.Component {
       }
 
     componentDidMount()
-    // getGaps()
+
     {
 
         fetch(`http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskID}`)
@@ -32,13 +32,9 @@ class GapsCard extends React.Component {
     {
         if (!this.props.isVisible)
             return null;
-
-        // this.getGaps()
         
         const {data, error} = this.state;
         const gapsList = []
-
-
 
         for (let gap in data)
             {

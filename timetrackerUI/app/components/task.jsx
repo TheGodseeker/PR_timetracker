@@ -17,14 +17,6 @@ class Task extends React.Component {
             isVisible: this.props.isVisible
         };
     }
-
-    // componentDidUpdate(prevProps) {
-    //     // Только сравниваем предыдущие props с текущими, чтобы избежать бесконечного цикла
-    //     if (this.props.gapsData !== prevProps.gapsData) {
-    //       console.log("Хоба")
-    //     }
-    //   }
-
     componentDidMount()
     {
         let request = `http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskId}` 
@@ -38,25 +30,8 @@ class Task extends React.Component {
           return response.json();
         })
         .then(data => this.setState({ gapsData: data}))
-        // .then(data => {
-        //     return data;
-        // })
         .catch(error => this.setState({ error: error}));
 
-        
-        // this.setState({gapsData: this.getGaps()})
-        // 
-        // this.getGaps()
-
-        // // const {gapsData} = this.state
-
-        // // for (let gap in gapsData)
-        // //     {
-        // //         if (gapsData[gap]['isActive'] === true)
-        // //             this.setState({isPlaying: true})
-        // //     }
-        // console.log("Text")
-        // console.log(this.state.gapsData)
     }
 
     getGaps()
@@ -72,9 +47,6 @@ class Task extends React.Component {
           return response.json();
         })
         .then(data => this.setState({ gapsData: data}))
-        // .then(data => {
-        //     return data;
-        // })
         .catch(error => this.setState({ error: error}));
 
   
@@ -134,7 +106,6 @@ class Task extends React.Component {
                 if (!response.ok) {
                   throw new Error('Network response was not ok');
                 }
-            // window.location.reload()
         })
 
         this.getGaps();
@@ -142,9 +113,7 @@ class Task extends React.Component {
 
     SetPause = () =>
     {
-        // TO-DO: Он не может ни прочиать старые пропсы, ни обновить в них данные.
-        // const {gapsData} = this.state
-        
+
 
         this.setState({isPlaying: false})
         
@@ -159,42 +128,16 @@ class Task extends React.Component {
                 if (!response.ok) {
                   throw new Error('Network response was not ok');
                 }
-            // window.location.reload()
         })     
 
 
-        // this.setState({isPlaying: false})
-
-        // // let curGaps = this.getGaps()
-
-        // console.log(curGaps)
-
-        // for (let gap in curGaps)
-        //     {
-        //         // console.log(curGaps[gap]['idTask'])
-        //         if(curGaps[gap]['idTask'] === this.props.taskId)
-        //             {
-        //                 // console.log(gapsData[gap]['idTask'])
-        //                 if(curGaps[gap]['isActive'])
-        //                     {
-        //                         // console.log("Есть пробитие")
-        //                         var gapId = curGaps[gap]['id']
-        //                         // this.SetEndTG(gapsData[gap]['taskId'], gapsData[gap]['isActive'])
-        //                         break
-        //                     }
-        //                 // gapId = curGaps[gap]['id']
-        //             }
-        //     }
-
-        // this.SetEndTG(gapId, false)
-        // console.log(this.state.gapsData)
     }
     render()
     {
         const {isVisible, gapsData, error, isPlaying} = this.state;
 
         let gapId = null
-        // console.log(gapsData)
+
 
         for (let gap in gapsData)
             {
@@ -204,7 +147,7 @@ class Task extends React.Component {
                         if(gapsData[gap]['isActive'])
                             {
                                 gapId = gap
-                                // this.SetEndTG(gapsData[gap]['taskId'], gapsData[gap]['isActive'])
+
                             }
                     }
             }

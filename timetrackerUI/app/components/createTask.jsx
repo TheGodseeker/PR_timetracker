@@ -56,7 +56,6 @@ class CreatePage extends React.Component {
                     <p>Планируемое кол-во времени</p>
                     <input type="number" name="time" value={this.state.time} onChange={this.handleChange}/>
                 </div>
-                {/* <p class="add-bt" onClick={(event) => this.handleSend(event)} >Создать</p> */}
                 <Link className={"add-bt"} to="/" onClick={(event) => this.handleSend(event)}>Создать</Link>
             </div>
         )

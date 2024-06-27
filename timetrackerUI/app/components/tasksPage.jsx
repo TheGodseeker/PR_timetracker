@@ -29,8 +29,6 @@ class TasksPage extends React.Component {
 
     }
 
-      // GetTasks(){
-      // render() {
       componentDidMount() {
 
         let getFunc = 'GetAllTasks'
@@ -58,9 +56,6 @@ class TasksPage extends React.Component {
     {         
         const {data, gapsData, error} = this.state;
         const tasksList = []
-
-
-        // this.GetTasks()
 
         if (error)
           {
