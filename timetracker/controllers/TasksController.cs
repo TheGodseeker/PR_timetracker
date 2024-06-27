@@ -8,14 +8,6 @@ using System.Text.Json;
    {
         public class TasksController : Controller
         {
-
-            /*
-            TO-DO
-
-            Методы, подключенные по DI возвращают только пустые строчки.
-            Возможно, это связано со связью с БД, но это не точно.
-            */
-
             private readonly ITask _taskRep;
             private readonly DBConnector _context; 
             

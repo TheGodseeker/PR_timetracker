@@ -31,7 +31,7 @@ using System.Text.Json;
             2) Расчет внутри функции контроллера
             */
 
-            [HttpPost] 
+            [HttpPut] 
             public void AddTimeGap(long taskID, long userID = 1)
             {
                     var gapsCount = _context.timeGaps.ToList().Count + 1;
@@ -52,13 +52,32 @@ using System.Text.Json;
 
 
 
-            // [HttpGet]
-            // public IActionResult GetGapActivity(long gapId)
-            // {
-            //     using (var _context = new DBConnector()){
+            [HttpPut]
+            public IActionResult SetTimeGapEnd(long taskID, long userID = 1)
+            {
+                var curGap = _context.timeGaps.FirstOrDefault(item => 
+                    (item.idTask == taskID) &&  (item.idUser == userID) && (item.isActive)
+                );
 
-            //     }
-            // }
+                if(curGap == null)
+                    return NoContent();
+
+                var curDT = DateTime.UtcNow;
+                curGap.timeFinish = curDT;
+                curGap.isActive = false;
+
+                // Добавляем разницу между UTC и ВЛ временем
+                var workTime = ((DateTime) curGap.timeFinish).AddHours(10) - curGap.timeStart;
+
+                Console.WriteLine($"Разница во времени: {workTime}");
+
+                var curTask = _context.tasks.FirstOrDefault(item => item.id == taskID);
+                curTask.spentTime += Convert.ToInt64(workTime.TotalMilliseconds);
+
+                _context.SaveChanges();
+
+                return Ok();
+            }
 
             [HttpPut]
             public IActionResult UpdateEndTimeGap(long gapId, bool isAct = true)
@@ -77,6 +96,7 @@ using System.Text.Json;
                     if (curGap.timeFinish > curDT && curGap.timeStart > curDT)
                     {
                         curGap.timeFinish = curDT;
+                        Console.WriteLine(curDT);
                         _context.SaveChanges();
                         
                         return Ok();
