@@ -17,8 +17,8 @@ ReactDOM.createRoot(
            <Header />
                 <Routes>
                     <Route path="/" element={<TasksPage />} />
-                    <Route path="/done" element={<TasksPage />} />
-                    <Route path="/undone" element={<TasksPage />} />
+                    <Route path="/done" element={<TasksPage isDone={true}/>} />
+                    <Route path="/undone" element={<TasksPage isDone={false}/>} />
                     <Route path="/create-task" element={<CreatePage />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>

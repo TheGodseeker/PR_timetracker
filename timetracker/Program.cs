@@ -1,39 +1,40 @@
-﻿using System;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
-class Program
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options => 
+   options.AddPolicy("AllowMain", builder => builder
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+    )
+);
+
+builder.Services.AddDbContext<DBConnector>(
+    options => options.UseNpgsql("Host=127.0.0.1;Database=timetracker;Username=tengu;Password=root")
+);
+
+builder.Services.AddScoped<ITask, TaskRep>();
+builder.Services.AddScoped<IGaps, GapsRep>();
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseCors("AllowMain");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+var webSocketOptions = new WebSocketOptions
 {
+    KeepAliveInterval = TimeSpan.FromSeconds(5)
+};
 
-    static void Main(string[] args)
-    {
+app.UseWebSockets(webSocketOptions);
 
-        
-        using (var context = new DBConnector())
-        {
+app.Run();
 
-            if (context.Database.CanConnect())
-            {
-                
-                // Тест приема кодом задач из БД
-                var curTasks = GetAllTasks();
-                Console.WriteLine("Все задачи:");
-                foreach(var task in curTasks)
-                {
-                    Console.WriteLine($"id: {task.id}, name: {task.name}, desc: {task.desc}, expTime: {task.expTime}, spentTime: {task.spentTime}, isDone: {task.isDone}");
-                }
-            }
-            else
-                Console.WriteLine("Нет связи с базой данных.");
-            
-        }
-    }
 
-    static List<Task> GetAllTasks()
-    {
-        using (var context = new DBConnector())
-        {
-            return context.tasks.ToList();
-
-        }
-    }
-}
