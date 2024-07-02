@@ -10,34 +10,69 @@ class Task extends React.Component {
     {
         super(props);
 
+        
+
         this.state = {
+            taskData: null,
             gapsData : null,
             error: null,
             isPlaying : false,
-            isVisible: this.props.isVisible
+            isVisible: this.props.isVisible,
+            spentTime: "0 ч. 0 мин. 0 сек.",
+            timeStyle: "norm-time",
+            expTimeTXT: "Не установлено."
         };
     }
     componentDidMount()
     {
-        let request = `http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskId}` 
-        console.log(request)
+        this.getTaskData()
 
-        fetch(request)
+        this.interval = setInterval(() => this.getGaps(), 1000) 
+
+        
+    }
+
+    getTaskData()
+    {
+
+        fetch(`http://localhost:5129/Tasks/GetTask?taskID=${this.props.taskId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
           return response.json();
         })
-        .then(data => this.setState({ gapsData: data}))
+        .then(data => this.setState({taskData: data}))
         .catch(error => this.setState({ error: error}));
 
+        setTimeout(() => {
+        
+        const {taskData} = this.state
+        
+        var spentHours = Math.floor(taskData['spentTime']/3600000);
+        var spentMinutes = Math.floor((taskData['spentTime'] - spentHours * 3600000)/60000);
+        var spentSeconds = Math.floor(((taskData['spentTime'] - spentHours * 3600000) - spentMinutes * 60000)/1000)
+        
+        if (this.props.expTime != 0)
+          {
+            let expHours = Math.floor(taskData['expTime']/3600000)
+            let expMinutes = Math.floor((taskData['expTime'] - expHours * 3600000 )/60000)
+            let expSeconds = Math.floor(((taskData['expTime'] - expHours * 3600000) - expMinutes * 60000)/1000)
+
+            this.setState({expTimeTXT: `${expHours} ч. ${expMinutes} мин. ${expSeconds} сек.`}) 
+            
+            if (taskData['spentTime'] > this.props.expTime)
+                this.setState({timeStyle: "overdue"}) 
+          } 
+
+        this.setState({spentTime: `${spentHours} ч. ${spentMinutes} мин. ${spentSeconds} сек.`})
+        }, 100)
     }
 
     getGaps()
     {
         let request = `http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskId}` 
-        console.log(request)
+        // console.log(request)
 
         fetch(request)
         .then(response => {
@@ -47,13 +82,24 @@ class Task extends React.Component {
           return response.json();
         })
         .then(data => this.setState({ gapsData: data}))
-        .catch(error => this.setState({ error: error}));
-
-  
-
+        .catch(error => this.setState({ error: error}))     
         
+        setTimeout(() => {
+        for(let gap in this.state.gapsData)
+            {
+                if (this.state.gapsData[gap]['isActive'] && this.state.isPlaying)
+                    {
+                        console.log(this.state.gapsData[gap]['isActive'])
+                        // this.setState({ isPlaying: true})
+                        this.UpdateTimer()
+                        this.getTaskData()
+                        break
+                    }
+            }  
+        }, 300)
 
     }
+
 
     CompleteTask = () => {
         fetch(`http://localhost:5129/Tasks/CompleteTask?taskID=${this.props.taskId}`, {
@@ -67,24 +113,7 @@ class Task extends React.Component {
         })
     };
  
-    SetEndTG = (gapId, status) => {
-        
-        let request = `http://localhost:5129/Gaps/UpdateEndTimeGap?gapId=${gapId}&isAct=${status}`
-        
-        console.log(request)
 
-        fetch(request, {
-            method: 'PUT'
-        })
-            .then(response => {
-                if (!response.ok) {
-                  throw new Error('Network response was not ok');
-                }
-            
-            // window.location.reload()
-        })
-        .catch(error => console.error(error));
-    }
 
     HideElement = () => {
         this.setState({isVisible: this.state.isVisible === false ? true : false});
@@ -92,78 +121,84 @@ class Task extends React.Component {
     
     SetStartTG = () =>
     {
-        // this.state.isPlaying = true
-        this.setState({isPlaying: true})
-        
+       
         let request = `http://localhost:5129/Gaps/AddTimeGap?taskID=${this.props.taskId}` 
 
-        console.log(request)
+        // console.log(request)
 
-        fetch(request, {
-            method: 'PUT'
-        })
-            .then(response => {
-                if (!response.ok) {
-                  throw new Error('Network response was not ok');
-                }
-        })
+        
+            fetch(request, {
+                method: 'PUT'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+            })
+        
 
-        this.getGaps();
+            this.setState({isPlaying: true})
+        // 
+        // this.getGaps();
     }
 
     SetPause = () =>
     {
-
-
-        this.setState({isPlaying: false})
         
+        this.setState({isPlaying: false})
+
         let request = `http://localhost:5129/Gaps/SetTimeGapEnd?taskID=${this.props.taskId}` 
 
         console.log(request)
 
-        fetch(request, {
-            method: 'PUT'
-        })
-            .then(response => {
-                if (!response.ok) {
-                  throw new Error('Network response was not ok');
-                }
-        })     
+        setTimeout(() => {
+            
+            fetch(request, {
+                method: 'PUT'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+            })
 
+        
 
+        
+    }, 100)     
     }
+
+    UpdateTimer = () =>
+        { 
+            setInterval(() => {
+                fetch(`http://localhost:5129/Gaps/SetTimeGapEnd?taskID=${this.props.taskId}&activeState=true`, {
+                    method: 'PUT'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                          throw new Error('Network response was not ok');
+                        }
+                }) 
+            }, 100)
+
+        }
+
+
     render()
     {
-        const {isVisible, gapsData, error, isPlaying} = this.state;
+        const {isVisible, taskData, expTimeTXT, isPlaying} = this.state;
 
-        let gapId = null
-
-
-        for (let gap in gapsData)
-            {
-                console.log(gapsData)
-                if(gapsData[gap]['taskId'] === this.props.taskId)
-                    {
-                        if(gapsData[gap]['isActive'])
-                            {
-                                gapId = gap
-
-                            }
-                    }
-            }
-
-        console.log(gapId)
 
         return(
             <div class = "task-main">
                 <div class= "task">
                     <h3 onClick={this.HideElement}> {isVisible ? '▲' : '▼'} {this.props.name}</h3>
-                    <p class={this.props.timeStyle}>Потрачено времени: </p>
-                    <p class={this.props.timeStyle}>{this.props.spentTime}</p>
+                    <p class={this.state.timeStyle}>Потрачено времени: </p>
+                    <p class={this.state.timeStyle}>{this.state.spentTime}</p>
                     <h4 class="add-bt" onClick={isPlaying ? this.SetPause :this.SetStartTG}>{isPlaying ? "Пауза" : "Старт"}</h4>
                     <h4 class = {this.props.isDoneStyle} onClick={this.props.isDoneStyle === "acssept"? this.CompleteTask : null}>{this.props.isDone}</h4>
                 </div>
-                <Overlay isVisible={isVisible} desc={this.props.desc} exptTime={this.props.exptTime}/>
+                <Overlay isVisible={isVisible} desc={this.props.desc} exptTime={expTimeTXT}/>
                 <GapsCard isVisible={isVisible} taskID={this.props.taskId}/>
             </div>
         )
@@ -172,12 +207,12 @@ class Task extends React.Component {
 
 Task.defaultProps = {
     name: "Работа", 
-    spentTime: "0 ч. 0 мин.",
-    timeStyle: "norm-time", 
+    // spentTime: "0 ч. 0 мин.",
+    // timeStyle: "norm-time", 
     isDone: "Закончить", 
     isDoneStyle : "acssept",
     desc: "Описание отсутствует.",
-    exptTime: "0 ч. 0 мин.",
+    exptTime: 0,
     isVisible: false,
     taskId: null
 }

@@ -6,6 +6,9 @@ class GapsCard extends React.Component {
     
     constructor(props) {
         super(props);
+
+
+
         this.state = {
           data: null,
           error: null,
@@ -13,9 +16,12 @@ class GapsCard extends React.Component {
       }
 
     componentDidMount()
-
     {
+        this.interval = setInterval(() => this.getGaps(), 1000) 
+    }
 
+    getGaps()
+    {
         fetch(`http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskID}`)
         .then(response => {
           if (!response.ok) {

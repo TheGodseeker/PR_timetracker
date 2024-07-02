@@ -45,9 +45,14 @@ using System.Text.Json;
             }
 
 
+            /*
+            TO-DO
 
+            Почему-то функция записывает разность от 0 старта (?),
+            что приводит к отриц. значению потрач. времени в БД
+            */
             [HttpPut]
-            public IActionResult SetTimeGapEnd(long taskID, long userID = 1)
+            public IActionResult SetTimeGapEnd(long taskID, long userID = 1, bool activeState = false)
             {
                 var curGap = _context.timeGaps.FirstOrDefault(item => 
                     (item.idTask == taskID) &&  (item.idUser == userID) && (item.isActive)
@@ -58,15 +63,30 @@ using System.Text.Json;
 
                 var curDT = DateTime.UtcNow;
                 curGap.timeFinish = curDT;
-                curGap.isActive = false;
+                curGap.isActive = activeState;
 
+
+                TimeSpan workTime = new TimeSpan();
                 // Добавляем разницу между UTC и ВЛ временем
-                var workTime = ((DateTime) curGap.timeFinish).AddHours(10) - curGap.timeStart;
+                // var workTime = ((DateTime) curGap.timeFinish).AddHours(10) - curGap.timeStart;
 
-                Console.WriteLine($"Разница во времени: {workTime}");
+                // Console.WriteLine($"Разница во времени: {workTime}");
+
+                var taskGaps = _gapsRep.GetTimeGaps(taskID);
+
+                foreach (var gap in taskGaps)
+                {
+
+                    if (gap.isActive)
+                        workTime += ((DateTime) gap.timeFinish).AddHours(10) - gap.timeStart;
+                    else                      
+                        workTime += ((DateTime) gap.timeFinish) - gap.timeStart;
+                           
+                }
 
                 var curTask = _context.tasks.FirstOrDefault(item => item.id == taskID);
-                curTask.spentTime += Convert.ToInt64(workTime.TotalMilliseconds);
+                // curTask.spentTime += Convert.ToInt64(workTime.TotalMilliseconds);
+                curTask.spentTime = Convert.ToInt64(workTime.TotalMilliseconds);
 
                 _context.SaveChanges();
 
