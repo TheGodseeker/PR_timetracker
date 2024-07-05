@@ -72,7 +72,7 @@ class Task extends React.Component {
     getGaps()
     {
         let request = `http://localhost:5129/Gaps/GetTimeGaps?taskID=${this.props.taskId}` 
-        // console.log(request)
+       
 
         fetch(request)
         .then(response => {
@@ -83,19 +83,36 @@ class Task extends React.Component {
         })
         .then(data => this.setState({ gapsData: data}))
         .catch(error => this.setState({ error: error}))     
-        
+ 
+        // if (this.state.isPlaying)
+        //     this.setState({isPlaying: false})
+
         setTimeout(() => {
         for(let gap in this.state.gapsData)
             {
-                if (this.state.gapsData[gap]['isActive'] && this.state.isPlaying)
+                if (this.state.gapsData[gap]['isActive'])
                     {
+                        if(!this.state.isPlaying)
+                            this.setState({
+                                isPlaying: true
+                            })
                         console.log(this.state.gapsData[gap]['isActive'])
-                        // this.setState({ isPlaying: true})
                         this.UpdateTimer()
                         this.getTaskData()
                         break
                     }
             }  
+            // var lastValue = Object.keys(this.state.gapsData)[Object.keys(this.state.gapsData).length - 1] 
+
+            // if (this.state.gapsData[lastValue]['isActive'])
+            // {
+            //     if(!this.state.isPlaying)
+            //         this.setState({isPlaying: true})
+            //     console.log(this.state.gapsData[this.state.gapsData.length - 1]['isActive'])
+            //     this.UpdateTimer()
+            //     this.getTaskData()
+            // }
+
         }, 300)
 
     }
@@ -142,12 +159,20 @@ class Task extends React.Component {
         // this.getGaps();
     }
 
+
+    /*
+    TO-DO:
+    
+    При нажатии на кнопку "Пауза" на одной вкладке она не меняется 
+    автоматом на кнопку "Старт" на другой. Только при
+    перезагрузке страницы.
+    */
     SetPause = () =>
     {
-        
         this.setState({isPlaying: false})
-
-        let request = `http://localhost:5129/Gaps/SetTimeGapEnd?taskID=${this.props.taskId}` 
+        
+        // let request = `http://localhost:5129/Gaps/SetTimeGapEnd?taskID=${this.props.taskId}` 
+        var request = `http://localhost:5129/Gaps/FinishTimeGap?taskID=${this.props.taskId}`
 
         console.log(request)
 
@@ -162,10 +187,10 @@ class Task extends React.Component {
                     }
             })
 
-        
-
-        
+            
     }, 100)     
+
+        // this.getGaps()
     }
 
     UpdateTimer = () =>
@@ -188,7 +213,6 @@ class Task extends React.Component {
     {
         const {isVisible, taskData, expTimeTXT, isPlaying} = this.state;
 
-
         return(
             <div class = "task-main">
                 <div class= "task">
@@ -207,8 +231,6 @@ class Task extends React.Component {
 
 Task.defaultProps = {
     name: "Работа", 
-    // spentTime: "0 ч. 0 мин.",
-    // timeStyle: "norm-time", 
     isDone: "Закончить", 
     isDoneStyle : "acssept",
     desc: "Описание отсутствует.",

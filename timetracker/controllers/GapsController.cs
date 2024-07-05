@@ -44,13 +44,6 @@ using System.Text.Json;
 
             }
 
-
-            /*
-            TO-DO
-
-            Почему-то функция записывает разность от 0 старта (?),
-            что приводит к отриц. значению потрач. времени в БД
-            */
             [HttpPut]
             public IActionResult SetTimeGapEnd(long taskID, long userID = 1, bool activeState = false)
             {
@@ -67,17 +60,13 @@ using System.Text.Json;
 
 
                 TimeSpan workTime = new TimeSpan();
-                // Добавляем разницу между UTC и ВЛ временем
-                // var workTime = ((DateTime) curGap.timeFinish).AddHours(10) - curGap.timeStart;
-
-                // Console.WriteLine($"Разница во времени: {workTime}");
-
                 var taskGaps = _gapsRep.GetTimeGaps(taskID);
 
                 foreach (var gap in taskGaps)
                 {
 
                     if (gap.isActive)
+                        // Добавляем разницу между UTC и ВЛ временем
                         workTime += ((DateTime) gap.timeFinish).AddHours(10) - gap.timeStart;
                     else                      
                         workTime += ((DateTime) gap.timeFinish) - gap.timeStart;
@@ -85,7 +74,6 @@ using System.Text.Json;
                 }
 
                 var curTask = _context.tasks.FirstOrDefault(item => item.id == taskID);
-                // curTask.spentTime += Convert.ToInt64(workTime.TotalMilliseconds);
                 curTask.spentTime = Convert.ToInt64(workTime.TotalMilliseconds);
 
                 _context.SaveChanges();
@@ -94,31 +82,20 @@ using System.Text.Json;
             }
 
             [HttpPut]
-            public IActionResult UpdateEndTimeGap(long gapId, bool isAct = true)
+            public IActionResult FinishTimeGap(long taskID)
             {
-                    var curGap = _context.timeGaps.FirstOrDefault(item => item.id == gapId);
+                    var curGap = _context.timeGaps.FirstOrDefault(item => 
+                        (item.idTask == taskID) && (item.isActive)
+                    );
                 
                     if (curGap == null)
                         return NoContent();
-                    
-                    curGap.isActive = isAct;   
-                    var curDT = DateTime.UtcNow;
 
-                    if(curGap.timeFinish != null)
-                        return NoContent();
-                        
-                    if (curGap.timeFinish > curDT && curGap.timeStart > curDT)
-                    {
-                        curGap.timeFinish = curDT;
-                        Console.WriteLine(curDT);
-                        _context.SaveChanges();
-                        
-                        return Ok();
-                    }
-                    else
-                    {
-                        return NoContent();
-                    }      
+
+                    curGap.isActive = false;
+                    _context.SaveChanges();
+
+                    return Ok();  
                         
             }
 
