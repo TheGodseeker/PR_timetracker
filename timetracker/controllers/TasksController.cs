@@ -44,6 +44,17 @@ using System.Text.Json;
 
             }
 
+            [HttpGet]
+            public IActionResult GetTask(long taskID)
+            {
+                var curTask = _context.tasks.FirstOrDefault(item => item.id == taskID);
+
+                var result = JsonSerializer.Serialize(curTask);
+
+                return Ok(result);         
+
+            }            
+
             [HttpPost]
             public void AddTask(string n, string d = null, long et = 0)
             {
